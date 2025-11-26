@@ -4,6 +4,76 @@ import plotly.graph_objects as go
 import plotly.express as px
 from scheduler import CPUScheduler, Process
 
+# ==================== HELPER FUNCTIONS ====================
+def _create_gantt_chart(execution_data, algorithm_name):
+    """Create interactive Gantt chart"""
+    fig = go.Figure()
+    
+    colors = px.colors.qualitative.Plotly
+    
+    for idx, (process_id, details) in enumerate(execution_data.items()):
+        color = colors[idx % len(colors)]
+        fig.add_trace(go.Bar(
+            y=[f"P{process_id}"] * len(details['intervals']),
+            x=[end - start for start, end in details['intervals']],
+            base=[start for start, end in details['intervals']],
+            name=f"P{process_id}",
+            marker=dict(color=color, line=dict(width=1, color='white')),
+            hovertemplate="<b>Process %{y}</b><br>Start: %{base}<br>Duration: %{x}<extra></extra>",
+            orientation='h'
+        ))
+    
+    fig.update_layout(
+        title=f"Gantt Chart - {algorithm_name}",
+        xaxis_title="Time (units)",
+        yaxis_title="Process",
+        barmode='overlay',
+        height=300,
+        hovermode='closest',
+        template='plotly_white',
+        showlegend=False,
+        margin=dict(l=80, r=20, t=40, b=40)
+    )
+    
+    return fig
+
+def _create_metrics_comparison(results_dict):
+    """Create comparison visualization"""
+    metrics_data = {
+        'Algorithm': [],
+        'Avg Wait Time': [],
+        'Avg Turnaround Time': [],
+        'CPU Utilization': [],
+        'Context Switches': []
+    }
+    
+    for algo_name, result in results_dict.items():
+        metrics = result['metrics']
+        metrics_data['Algorithm'].append(algo_name)
+        metrics_data['Avg Wait Time'].append(metrics['avg_wait_time'])
+        metrics_data['Avg Turnaround Time'].append(metrics['avg_turnaround_time'])
+        metrics_data['CPU Utilization'].append(metrics['cpu_utilization'])
+        metrics_data['Context Switches'].append(metrics['context_switches'])
+    
+    df = pd.DataFrame(metrics_data)
+    
+    fig = go.Figure(data=[
+        go.Bar(name='Avg Wait Time', x=df['Algorithm'], y=df['Avg Wait Time'], marker_color='#1f77b4'),
+        go.Bar(name='Avg Turnaround', x=df['Algorithm'], y=df['Avg Turnaround Time'], marker_color='#ff7f0e'),
+        go.Bar(name='CPU Utilization %', x=df['Algorithm'], y=df['CPU Utilization'], marker_color='#2ca02c')
+    ])
+    
+    fig.update_layout(
+        title="Algorithm Performance Comparison",
+        barmode='group',
+        height=400,
+        template='plotly_white',
+        hovermode='x unified',
+        margin=dict(l=80, r=20, t=40, b=40)
+    )
+    
+    return fig, df
+    
 # Page configuration
 st.set_page_config(
     page_title="CPU Scheduling Simulator",
@@ -282,73 +352,3 @@ with tab_about:
     - Plotly (Visualization)
     - Pandas (Data Processing)
     """)
-
-# ==================== HELPER FUNCTIONS ====================
-def _create_gantt_chart(execution_data, algorithm_name):
-    """Create interactive Gantt chart"""
-    fig = go.Figure()
-    
-    colors = px.colors.qualitative.Plotly
-    
-    for idx, (process_id, details) in enumerate(execution_data.items()):
-        color = colors[idx % len(colors)]
-        fig.add_trace(go.Bar(
-            y=[f"P{process_id}"] * len(details['intervals']),
-            x=[end - start for start, end in details['intervals']],
-            base=[start for start, end in details['intervals']],
-            name=f"P{process_id}",
-            marker=dict(color=color, line=dict(width=1, color='white')),
-            hovertemplate="<b>Process %{y}</b><br>Start: %{base}<br>Duration: %{x}<extra></extra>",
-            orientation='h'
-        ))
-    
-    fig.update_layout(
-        title=f"Gantt Chart - {algorithm_name}",
-        xaxis_title="Time (units)",
-        yaxis_title="Process",
-        barmode='overlay',
-        height=300,
-        hovermode='closest',
-        template='plotly_white',
-        showlegend=False,
-        margin=dict(l=80, r=20, t=40, b=40)
-    )
-    
-    return fig
-
-def _create_metrics_comparison(results_dict):
-    """Create comparison visualization"""
-    metrics_data = {
-        'Algorithm': [],
-        'Avg Wait Time': [],
-        'Avg Turnaround Time': [],
-        'CPU Utilization': [],
-        'Context Switches': []
-    }
-    
-    for algo_name, result in results_dict.items():
-        metrics = result['metrics']
-        metrics_data['Algorithm'].append(algo_name)
-        metrics_data['Avg Wait Time'].append(metrics['avg_wait_time'])
-        metrics_data['Avg Turnaround Time'].append(metrics['avg_turnaround_time'])
-        metrics_data['CPU Utilization'].append(metrics['cpu_utilization'])
-        metrics_data['Context Switches'].append(metrics['context_switches'])
-    
-    df = pd.DataFrame(metrics_data)
-    
-    fig = go.Figure(data=[
-        go.Bar(name='Avg Wait Time', x=df['Algorithm'], y=df['Avg Wait Time'], marker_color='#1f77b4'),
-        go.Bar(name='Avg Turnaround', x=df['Algorithm'], y=df['Avg Turnaround Time'], marker_color='#ff7f0e'),
-        go.Bar(name='CPU Utilization %', x=df['Algorithm'], y=df['CPU Utilization'], marker_color='#2ca02c')
-    ])
-    
-    fig.update_layout(
-        title="Algorithm Performance Comparison",
-        barmode='group',
-        height=400,
-        template='plotly_white',
-        hovermode='x unified',
-        margin=dict(l=80, r=20, t=40, b=40)
-    )
-    
-    return fig, df
