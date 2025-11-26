@@ -9,7 +9,7 @@ from pathlib import Path
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from backend.simulator import CPUScheduler
+from scheduler import CPUScheduler
 from backend.models.process import Process
 
 # Page configuration
