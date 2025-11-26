@@ -82,61 +82,117 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for professional styling
 st.markdown("""
-    <style>
-    * {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    .main-header {
-        color: #1f77b4;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        letter-spacing: -1px;
-    }
-    
-    .subtitle {
-        color: #666;
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .section-header {
-        border-bottom: 3px solid #1f77b4;
-        padding-bottom: 0.75rem;
-        margin: 2rem 0 1.5rem 0;
-        color: #1f77b4;
-        font-size: 1.4rem;
-        font-weight: 600;
-    }
-    
-    .metric-card {
-        background: linear-gradient(135deg, #1f77b4 0%, #2ca02c 100%);
-        padding: 1.5rem;
-        border-radius: 8px;
-        color: white;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .gantt-container {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin: 1.5rem 0;
-        border-left: 4px solid #1f77b4;
-    }
-    
-    .info-box {
-        background: #e7f3ff;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid #1f77b4;
-        margin: 1rem 0;
-    }
-    </style>
+<style>
+
+:root {
+    --primary: #4f8bf9;
+    --secondary: #7b42f6;
+    --accent: #1fd1f9;
+    --bg-dark: #0d1117;
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --glass: rgba(255, 255, 255, 0.15);
+    --text: #e6edf3;
+}
+
+/* Main Background */
+body {
+    background: var(--bg-dark);
+}
+
+/* Header */
+.main-header {
+    color: var(--accent);
+    font-size: 2.6rem;
+    font-weight: 800;
+    text-shadow: 0 0 18px rgba(31, 209, 249, 0.3);
+}
+
+.subtitle {
+    color: #9ba3b4;
+    margin-top: -10px;
+}
+
+/* Section Header */
+.section-header {
+    color: var(--accent);
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-left: 5px solid var(--accent);
+    padding-left: 15px;
+    margin: 25px 0 15px 0;
+}
+
+/* Glassmorphism Cards */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+}
+
+/* Modern Gantt Container */
+.gantt-container {
+    background: var(--glass);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 25px;
+}
+
+/* Metric Cards */
+.metric-card {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 16px;
+    border-radius: 12px;
+    color: white !important;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(79,139,249,0.4);
+    transition: 0.3s ease-in-out;
+}
+
+.metric-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 20px rgba(127,66,246,0.6);
+}
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    padding: 13px 22px;
+    font-size: 18px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(31,209,249,0.4);
+    transition: 0.3s ease;
+}
+
+.stButton > button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 22px rgba(127,66,246,0.8);
+}
+
+/* Tabs */
+.stTabs [role="tab"] {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-right: 8px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.stTabs [role="tab"][aria-selected="true"] {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    box-shadow: 0 0 15px rgba(79,139,249,0.4);
+}
+
+</style>
 """, unsafe_allow_html=True)
 
 # Title
